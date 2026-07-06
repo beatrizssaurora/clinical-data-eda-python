@@ -1,0 +1,39 @@
+from google.colab import drive
+import pandas as pd
+import os
+
+# Monta o Google Drive no ambiente do Colab
+drive.mount('/content/drive')
+
+# Agora você pode acessar seu arquivo usando o caminho completo a partir do ponto de montagem
+# Por exemplo:
+# file_path = '/content/drive/My Drive/Profa Catiane/Analise_Dissertacao/estrutura_banco_spss - conferencia (version 1).xlsb'
+# df = pd.read_excel(file_path)
+
+# Substitua pelo caminho exato onde salvou o arquivo dentro do seu Drive
+caminho_arquivo = '/content/drive/MyDrive/Profa Catiane/Analise_Dissertacao/estrutura_banco_spss - conferencia (version 1).xlsb.xlsx'
+
+# Carrega as abas do Excel
+df_banco = pd.read_excel(caminho_arquivo, sheet_name='Banco de dados')
+df_dicionario = pd.read_excel(caminho_arquivo, sheet_name='Dicionario_SPSS')
+
+# Exibe as primeiras linhas para conferência
+print("Banco de Dados carregado com sucesso!")
+display(df_banco.head(3))
+
+# Estatísticas descritivas das variáveis numéricas (Idade, Peso, Altura, IMC, etc.)
+estatisticas_numericas = df_banco.describe()
+print(estatisticas_numericas)
+
+# Verificação de dados faltantes (nulos) por coluna
+print("\nValores nulos por variável:")
+print(df_banco.isnull().sum())
+
+# Salva o banco de dados diretamente em formato CSV na sua pasta do Drive
+caminho_saida = '/content/drive/MyDrive/Profa Catiane/Analise_Dissertacao/banco_tratado_para_looker.csv'
+
+# Cria o diretório de saída se ele não existir
+os.makedirs(os.path.dirname(caminho_saida), exist_ok=True)
+
+df_banco.to_csv(caminho_saida, index=False, encoding='utf-8-sig')
+print("Arquivo pronto para o Looker Studio salvo no Drive!")
